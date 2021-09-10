@@ -1,14 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template<typename T>
-void printVector(vector<T>& v)
-{
-   for (auto i = v.begin();i<v.end();i++)
-      cout << *i << " ";
-   cout << endl;
-}
-
 int main()
 {
    ios_base::sync_with_stdio(false);
