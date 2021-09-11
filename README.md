@@ -1,0 +1,1 @@
+This is an archive of competitive programming solutions. They are all done in C++.
