@@ -3,8 +3,9 @@ using namespace std;
 
 bool test(long long d,vector<pair<int,int>> &p, long long delx, long long dely) //returns true if d days works
 {
-   long long currx = p.back().first*(d/(p.size()-1)) + p[d%(p.size()-1)].first;
+   long long currx = p.back().first*(d/(p.size()-1)) + p[d%(p.size()-1)].first; //use prefix sum - O(1)
    long long curry = p.back().second*(d/(p.size()-1)) + p[d%(p.size()-1)].second;
+   //checks if manhattan distance is less than or equal to the number of days we're checking
    return abs(currx-delx)+abs(curry-dely) <= d;
 }
 
@@ -17,11 +18,11 @@ int main()
    cin >> xchange >> ychange;
    long long x,y;
    cin >> x >> y;
-   xchange = x-xchange;
+   xchange = x-xchange; //xchange and ychange are the deltas between start+end coordinates
    ychange = y-ychange;
    int n;
    cin >> n;
-   vector<pair<int,int>> psum(n+1);
+   vector<pair<int,int>> psum(n+1); //prefix sum of how much wind moves the ship
    for (int i = 1;i<n+1;i++)
    {
       char a;
@@ -39,7 +40,7 @@ int main()
    long long l = 0;
    long long r = 1e18;
    long long ans = -1;
-   while (l<r)
+   while (l<r) //binary search
    {
       long long m = (l+r)/2;
       if (test(m,psum,xchange,ychange))
