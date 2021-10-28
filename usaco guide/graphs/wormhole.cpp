@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool test(int x,vector<int> &c,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
+bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
 {
    vector<unordered_set<int>> adjmat;
-   for (int i = 0;i<c.size();i++)
+   for (int i = 0;i<l.size();i++)
    {
       unordered_set<int> a;
       adjmat.push_back(a);
@@ -19,8 +19,11 @@ bool test(int x,vector<int> &c,vector<pair<int,pair<int,int>>> &holes) //returns
    }
 
    unordered_set<int> visited;
-   for (int i = 0;i<c.size();i++)
+   for (int i = 0;i<l.size();i++)
    {
+      if (visited.find(i)!=visited.end())
+         continue;
+      
       unordered_set<int> component;
       stack<int> s;
       s.push(i);
@@ -39,7 +42,7 @@ bool test(int x,vector<int> &c,vector<pair<int,pair<int,int>>> &holes) //returns
 
       for (int j:component)
       {
-         if (component.find(find(c.begin(),c.end(),j)-c.begin()) == component.end())
+         if (component.find(l[j]) == component.end())
             return false;
       }
    }
@@ -58,11 +61,13 @@ int main()
    int n,m;
    cin >> n >> m;
    vector<int> cows(n);
+   unordered_map<int,int> lookup;
    for (int i = 0;i<n;i++)
    {
       int x;
       cin >> x;
       cows[i] = x-1;
+      lookup[x-1]=i;
    }
 
    //print -1 if sorted
@@ -86,8 +91,8 @@ int main()
    int l=0, r=1e9+1;
    while (l<r)
    {
-      int mid = (l+r)/2;
-      if (test(mid,cows,wormholes))
+      int mid = (l+r+1)/2;
+      if (test(mid,lookup,wormholes))
       {
          l=mid;
       }
