@@ -3,7 +3,7 @@ using namespace std;
 
 bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
 {
-   vector<unordered_set<int>> adjmat;
+   vector<unordered_set<int>> adjmat; //initialize adjacency list
    for (int i = 0;i<l.size();i++)
    {
       unordered_set<int> a;
@@ -11,6 +11,7 @@ bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes
    }
 
    auto iter = lower_bound(holes.begin(),holes.end(),make_pair(x,make_pair(0,0)));
+   //adds to adjacency list for wormholes with width x or higher
    while (iter<holes.end())
    {
       adjmat[(*iter).second.first].insert((*iter).second.second);
@@ -24,6 +25,7 @@ bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes
       if (visited.find(i)!=visited.end())
          continue;
       
+      //dfs
       unordered_set<int> component;
       stack<int> s;
       s.push(i);
@@ -40,6 +42,7 @@ bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes
          }
       }
 
+      //checks if cows in this component can be sorted - essentially same as set comparison
       for (int j:component)
       {
          if (component.find(l[j]) == component.end())
@@ -61,12 +64,12 @@ int main()
    int n,m;
    cin >> n >> m;
    vector<int> cows(n);
-   unordered_map<int,int> lookup;
+   unordered_map<int,int> lookup; //lookup table for index of each cow
    for (int i = 0;i<n;i++)
    {
       int x;
       cin >> x;
-      cows[i] = x-1;
+      cows[i] = x-1; //cows and wormhole positions are 0 based
       lookup[x-1]=i;
    }
 
