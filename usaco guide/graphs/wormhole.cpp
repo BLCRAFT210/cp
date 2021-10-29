@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
+bool test(int x,vector<int> &l,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
 {
-   vector<unordered_set<int>> adjmat; //initialize adjacency list
+   vector<vector<int>> adjmat; //initialize adjacency list
    for (int i = 0;i<l.size();i++)
    {
-      unordered_set<int> a;
+      vector<int> a;
       adjmat.push_back(a);
    }
 
@@ -14,28 +14,28 @@ bool test(int x,unordered_map<int,int> &l,vector<pair<int,pair<int,int>>> &holes
    //adds to adjacency list for wormholes with width x or higher
    while (iter<holes.end())
    {
-      adjmat[(*iter).second.first].insert((*iter).second.second);
-      adjmat[(*iter).second.second].insert((*iter).second.first);
+      adjmat[(*iter).second.first].push_back((*iter).second.second);
+      adjmat[(*iter).second.second].push_back((*iter).second.first);
       iter++;
    }
 
-   unordered_set<int> visited;
+   vector<bool> visited(l.size());
    for (int i = 0;i<l.size();i++)
    {
-      if (visited.find(i)!=visited.end())
+      if (visited[i])
          continue;
       
       //dfs
-      unordered_set<int> component;
+      set<int> component;
       stack<int> s;
       s.push(i);
       while (!s.empty())
       {
          int a = s.top();
          s.pop();
-         if (visited.find(a)==visited.end())
+         if (!visited[a])
          {
-            visited.insert(a);
+            visited[a]=true;
             component.insert(a);
             for (auto j:adjmat[a])
                s.push(j);
@@ -64,7 +64,7 @@ int main()
    int n,m;
    cin >> n >> m;
    vector<int> cows(n);
-   unordered_map<int,int> lookup; //lookup table for index of each cow
+   vector<int> lookup(n); //lookup table for index of each cow
    for (int i = 0;i<n;i++)
    {
       int x;
