@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool test(int x,vector<int> &l,vector<pair<int,pair<int,int>>> &holes) //returns true if x works as minimum width
+bool test(int x,vector<int> &l,vector<array<int,3>> &holes) //returns true if x works as minimum width
 {
    vector<vector<int>> adjmat; //initialize adjacency list
    for (int i = 0;i<l.size();i++)
@@ -10,12 +10,13 @@ bool test(int x,vector<int> &l,vector<pair<int,pair<int,int>>> &holes) //returns
       adjmat.push_back(a);
    }
 
-   auto iter = lower_bound(holes.begin(),holes.end(),make_pair(x,make_pair(0,0)));
+   array<int,3> searchval = {x,0,0};
+   auto iter = lower_bound(holes.begin(),holes.end(),searchval);
    //adds to adjacency list for wormholes with width x or higher
    while (iter<holes.end())
    {
-      adjmat[(*iter).second.first].push_back((*iter).second.second);
-      adjmat[(*iter).second.second].push_back((*iter).second.first);
+      adjmat[(*iter)[1]].push_back((*iter)[2]);
+      adjmat[(*iter)[2]].push_back((*iter)[1]);
       iter++;
    }
 
@@ -80,12 +81,12 @@ int main()
       return 0;
    }
 
-   vector<pair<int,pair<int,int>>> wormholes(m);
+   vector<array<int,3>> wormholes(m);
    for (int i = 0;i<m;i++)
    {
       int x,y,w;
       cin >> x >> y >> w;
-      wormholes[i]={w,{x-1,y-1}};
+      wormholes[i]={w,x-1,y-1};
    }
 
    sort(wormholes.begin(),wormholes.end());
