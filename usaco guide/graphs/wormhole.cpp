@@ -1,33 +1,36 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool test(int x,vector<int> &l,vector<array<int,3>> &holes) //returns true if x works as minimum width
+vector<array<int,3>> wormholes;
+vector<int> lookup;
+
+bool test(int x) //returns true if x works as minimum width
 {
    vector<vector<int>> adjmat; //initialize adjacency list
-   for (int i = 0;i<l.size();i++)
+   for (int i = 0;i<lookup.size();i++)
    {
       vector<int> a;
       adjmat.push_back(a);
    }
 
    array<int,3> searchval = {x,0,0};
-   auto iter = lower_bound(holes.begin(),holes.end(),searchval);
+   auto iter = lower_bound(wormholes.begin(),wormholes.end(),searchval);
    //adds to adjacency list for wormholes with width x or higher
-   while (iter<holes.end())
+   while (iter<wormholes.end())
    {
       adjmat[(*iter)[1]].push_back((*iter)[2]);
       adjmat[(*iter)[2]].push_back((*iter)[1]);
       iter++;
    }
 
-   vector<bool> visited(l.size());
-   for (int i = 0;i<l.size();i++)
+   vector<bool> visited(lookup.size());
+   for (int i = 0;i<lookup.size();i++)
    {
       if (visited[i])
          continue;
       
       //dfs
-      set<int> component;
+      unordered_set<int> component;
       stack<int> s;
       s.push(i);
       while (!s.empty())
@@ -46,7 +49,7 @@ bool test(int x,vector<int> &l,vector<array<int,3>> &holes) //returns true if x 
       //checks if cows in this component can be sorted - essentially same as set comparison
       for (int j:component)
       {
-         if (component.find(l[j]) == component.end())
+         if (component.find(lookup[j]) == component.end())
             return false;
       }
    }
@@ -65,7 +68,7 @@ int main()
    int n,m;
    cin >> n >> m;
    vector<int> cows(n);
-   vector<int> lookup(n); //lookup table for index of each cow
+   lookup.resize(n); //lookup table for index of each cow
    for (int i = 0;i<n;i++)
    {
       int x;
@@ -81,7 +84,7 @@ int main()
       return 0;
    }
 
-   vector<array<int,3>> wormholes(m);
+   wormholes.resize(m);
    for (int i = 0;i<m;i++)
    {
       int x,y,w;
@@ -96,7 +99,7 @@ int main()
    while (l<r)
    {
       int mid = (l+r+1)/2;
-      if (test(mid,lookup,wormholes))
+      if (test(mid))
       {
          l=mid;
       }
